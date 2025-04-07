@@ -1,0 +1,29 @@
+---
+- name: Check and install ngrep using shell
+  hosts: slaves
+  become: yes  # Используйте sudo для выполнения задач от имени администратора
+  tasks:
+    - name: Check if ngrep is installed
+      shell: |
+        if ! command -v ngrep &> /dev/null; then
+          echo "ngrep is not installed"
+          exit 1
+        else
+          echo "ngrep is installed"
+        fi
+      register: ngrep_check
+      ignore_errors: yes  # Игнорируем ошибку, если пакет не установлен
+
+    - name: Install ngrep if not installed
+      shell: |
+        if ! command -v ngrep &> /dev/null; then
+          if [ -x "$(command -v apt)" ]; then
+            apt update && apt install -y ngrep
+          elif [ -x "$(command -v yum)" ]; then
+            yum install -y ngrep
+          else
+            echo "Unsupported package manager"
+            exit 1
+          fi
+        fi
+      when: ngrep_check.rc != 0  # Выполняем установку только если пакет не установлен

@@ -1,0 +1,18 @@
+- name: Create a directory on remote hosts
+  hosts: slaves
+  become: yes  # Используйте sudo, если необходимо
+  tasks:
+    - name: Ensure the directory exists
+      file:
+        path: /tmp/test_directory_2  # Укажите путь к создаваемой директории
+        state: directory          # Указывает, что нужно создать директорию
+        owner: root          # Укажите владельца директории (опционально)
+        group: root         # Укажите группу директории (опционально)
+        mode: '0640'              # Установите права доступа (опционально)
+    - name: Create file
+      file:
+        path: /tmp/test_directory_2/test.txt
+        state: touch
+        owner: root          # Укажите владельца директории (опционально)
+        group: root         # Укажите группу директории (опционально)
+        mode: '0640'              # Установите права доступа (опционально)

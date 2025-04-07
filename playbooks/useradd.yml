@@ -1,0 +1,10 @@
+---
+- name: Create a new user
+  hosts: slaves
+  become: yes  # Используйте sudo для выполнения задач от имени администратора
+  tasks:
+    - name: Ensure the user is present
+      user:
+        name: test_user          # Имя пользователя, которого нужно создать
+        state: present         # Убедитесь, что пользователь существует
+        shell: /bin/bash       # Укажите оболочку (по умолчанию /bin/bash)

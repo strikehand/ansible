@@ -1,0 +1,10 @@
+---
+- name: Install packages on remote hosts
+  remote_user: root
+  hosts: slaves
+  become: yes  # Используйте sudo, если необходимо
+  tasks:
+    - name: Install ngrep
+      apt:
+        name: ngrep
+        state: present

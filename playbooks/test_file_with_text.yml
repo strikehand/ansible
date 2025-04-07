@@ -1,0 +1,12 @@
+---
+- name: Create a text file with specific content
+  hosts: slaves
+  become: yes  # Используйте sudo для выполнения задач от имени администратора
+  tasks:
+    - name: Create a text file
+      copy:
+        content: "This is test file"
+        dest: /tmp/test_file_test.txt  # Укажите путь к файлу, который вы хотите создать
+        owner: root  # Укажите владельца файла (опционально)
+        group: root  # Укажите группу файла (опционально)
+        mode: '0644'  # Укажите права доступа к файлу (опционально)
