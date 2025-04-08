@@ -1,10 +1,30 @@
 ---
-- name: Create a new user
+- name: Create a user and deploy SSH key
   hosts: slaves
   become: yes  # Используйте sudo для выполнения задач от имени администратора
+  vars:
+    username: churka  # Замените на имя пользователя, которого хотите создать
+    ssh_key: "{{ lookup('file', '/Users/pavelkotomkin/Documents/ansible/.creds/user_ssh') }}"  # Укажите путь к вашему публичному ключу
+
   tasks:
-    - name: Ensure the user is present
+    - name: Create a new user
       user:
-        name: test_user          # Имя пользователя, которого нужно создать
-        state: present         # Убедитесь, что пользователь существует
-        shell: /bin/bash       # Укажите оболочку (по умолчанию /bin/bash)
+        name: "{{ username }}"
+        state: present
+        create_home: yes  # Создать домашнюю директорию
+
+    - name: Ensure .ssh directory exists
+      file:
+        path: "/home/{{ username }}/.ssh"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: '0700'  # Права доступа к директории .ssh
+
+    - name: Deploy SSH public key
+      copy:
+        content: "{{ ssh_key }}"
+        dest: "/home/{{ username }}/.ssh/authorized_keys"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: '0600'  # Права доступа к файлу authorized_keys
