@@ -3,8 +3,8 @@
   hosts: slaves
   become: yes  # Используйте sudo для выполнения задач от имени администратора
   vars:
-    username: churka  # Замените на имя пользователя, которого хотите создать
-    ssh_key: "{{ lookup('file', '/Users/pavelkotomkin/Documents/ansible/ssh_keys/user_ssh') }}"  # Укажите путь к вашему публичному ключу
+    username: user  # Замените на имя пользователя, которого хотите создать
+    ssh_key: "{{ lookup('file', '/path/to/file') }}"  # Укажите путь к вашему публичному ключу
     user_password: "your_password"  # Замените на желаемый пароль для пользователя
 
   tasks:
