@@ -5,6 +5,7 @@
   vars:
     username: churka  # Замените на имя пользователя, которого хотите создать
     ssh_key: "{{ lookup('file', '/Users/pavelkotomkin/Documents/ansible/ssh_keys/user_ssh') }}"  # Укажите путь к вашему публичному ключу
+    user_password: "your_password"  # Замените на желаемый пароль для пользователя
 
   tasks:
     - name: Create a new user
@@ -12,6 +13,13 @@
         name: "{{ username }}"
         state: present
         create_home: yes  # Создать домашнюю директорию
+        password: "{{ user_password | password_hash('sha512') }}"
+
+    - name: Add user to sudo group
+      user:
+        name: "{{ username }}"
+        groups: sudo  # Добавляем пользователя в группу sudo
+        append: yes  # Не удалять пользователя из других групп
 
     - name: Ensure .ssh directory exists
       file:
