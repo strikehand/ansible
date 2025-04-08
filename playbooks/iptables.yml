@@ -1,0 +1,14 @@
+---
+- name: Configure iptables rules
+  hosts: slaves
+  become: yes  # Используйте sudo для выполнения задач от имени администратора
+  tasks:
+
+    - name: Allow HTTP access
+      iptables:
+        chain: INPUT
+        protocol: tcp
+        source: 192.168.0.0/24
+        destination_port: 8080
+        jump: ACCEPT
+
