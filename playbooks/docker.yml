@@ -1,0 +1,7 @@
+---
+- name: Install Docker and Docker Compose on target hosts
+  hosts: slaves
+  become: yes
+
+  roles:
+    - docker
