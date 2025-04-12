@@ -1,0 +1,8 @@
+---
+
+# handlers/main.yml
+
+- name: Restart prometheus service
+  systemd:
+    name: prometheus.service
+    state: restarted

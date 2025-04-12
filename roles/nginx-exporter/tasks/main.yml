@@ -1,0 +1,37 @@
+---
+# tasks/main.yml
+
+- name: Install dependencies
+  apt:
+    name:
+      - wget
+      - curl
+      - unzip
+    state: present
+  become: true
+
+- name: Download nginx-prometheus-exporter
+  get_url:
+    url: "https://github.com/nginx/nginx-prometheus-exporter/releases/download/v1.4.0/nginx-prometheus-exporter_1.4.0_linux_amd64.tar.gz"
+    dest: /tmp/nginx-prometheus-exporter.tar.gz
+
+- name: Extract nginx-prometheus-exporter
+  unarchive:
+    src: /tmp/nginx-prometheus-exporter.tar.gz
+    dest: /usr/local/bin/
+    remote_src: yes
+
+- name: Move nginx-prometheus-exporter binary to /usr/local/bin/
+  command: mv /usr/local/bin/nginx-prometheus-exporter-{{ exporter_version }}.linux-amd64/nginx-prometheus-exporter /usr/local/bin/nginx-prometheus-exporter creates=/usr/local/bin/nginx-prometheus-exporter
+
+- name: Create a systemd service file for nginx-prometheus-exporter
+  template:
+    src: nginx-prometheus-exporter.service.j2
+    dest: /etc/systemd/system/nginx-prometheus-exporter.service
+
+- name: Start and enable nginx-prometheus-exporter service
+  systemd:
+    name: nginx-prometheus-exporter.service
+    state: started
+    enabled: true
+             

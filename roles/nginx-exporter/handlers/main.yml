@@ -1,0 +1,7 @@
+---
+# handlers/main.yml
+
+- name: Restart nginx-prometheus-exporter service
+  systemd:
+    name: nginx-prometheus-exporter.service
+    state: restarted
